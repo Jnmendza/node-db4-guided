@@ -20,12 +20,14 @@ exports.up = function(knex) {
       .onDelete('RESTRICT') // about deleting the record from the primary key table. Could be `RESTRICT`, `NO ACTION`, ``
       .onUpdate('CASCADE') // about changing the value of the primary key table.
   })
-  
+
   .createTable('zoos', tbl => {
     tbl.increments();
 
-    tbl.string('name')
+    tbl.string('name').notNullable()
     tbl.string('address')
+
+   
 })
 
   .createTable('animal_zoos', tbl => {
@@ -36,11 +38,25 @@ exports.up = function(knex) {
       tbl.date('from')
       tbl.date('to')
 
+      tbl.integer('zoo_id')
+      .unsigned()
+      .references('id')
+      .inTable('zoos')
+      .onDelete('RESTRICT') // about deleting the record from the primary key table. Could be `RESTRICT`, `NO ACTION`, ``
+      .onUpdate('CASCADE') 
+      
+      tbl.integer('animal_id')
+      .unsigned()
+      .references('id')
+      .inTable('animals')
+      .onDelete('RESTRICT') // about deleting the record from the primary key table. Could be `RESTRICT`, `NO ACTION`, ``
+      .onUpdate('CASCADE') 
+
   })
 
   
 };
 
 exports.down = function(knex) {
-  
+  return knex.schema
 };
